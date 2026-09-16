@@ -5,7 +5,7 @@ import { connectDB } from './config/db';
 import authRoutes from './features/auth/auth.routes';
 import lgaRoutes from './features/lga/lga.routes';
 import companyRoutes from './features/company/company.routes';
-import financeRoutes from './features/finance/finance.routes'; // <-- IMPORT MPYA YA PESA
+import financeRoutes from './features/finance/finance.routes'; 
 import superAdminRoutes from './features/super-admin/super-admin.routes';
 
 // Load environment variables
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes); 
 app.use('/api/lga', lgaRoutes);
 app.use('/api/company', companyRoutes);
-app.use('/api/finance', financeRoutes); // <-- NJIA MPYA YA MIAMALA IMEWEKWA HAPA
+app.use('/api/finance', financeRoutes);
 app.use('/api/super-admin', superAdminRoutes);
 // Health check endpoint
 app.get('/api/health', (req: Request, res: Response) => {
