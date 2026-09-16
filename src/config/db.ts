@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const pool = new Pool({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
@@ -20,3 +20,5 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
+
+export default pool;

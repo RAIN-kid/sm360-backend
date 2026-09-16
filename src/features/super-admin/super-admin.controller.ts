@@ -776,7 +776,7 @@ export const sendWarningSMS = async (req: Request, res: Response) => {
 
       if (defaulters.rows.length === 0) return res.status(400).json({ status: 'error', message: 'Hakuna wadaiwa wa kutumiwa SMS.' });
 
-      const messages = defaulters.rows.map(d => {
+      const messages = defaulters.rows.map((d: any) => {
         let phone = d.phone_number.replace(/\D/g, '');
         if (phone.startsWith('0')) phone = '255' + phone.substring(1);
         return {
