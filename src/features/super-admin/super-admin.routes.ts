@@ -22,7 +22,7 @@ import { verifyToken, authorizeRoles } from '../../middlewares/auth.middleware';
 const router = Router();
 
 // ================= 1. DASHBOARD & PROFILE =================
-router.get('/dashboard', verifyToken, getDashboardMetrics);
+router.get('/dashboard-metrics', verifyToken, getDashboardMetrics);
 router.get('/my-profile', verifyToken, getMyProfile); 
 
 // ================= 2. ORGANIZATIONS (LGA) =================

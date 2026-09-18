@@ -15,23 +15,29 @@ const cp = new ClickPesa({
 // ==================== DASHBOARD & ORGANIZATIONS ====================
 export const getDashboardMetrics = async (req: Request, res: Response) => {
   try {
-    // 1. Halmashauri (LGA) - Kutumia column yako sahihi
-    const lgaResult = await pool.query("SELECT COUNT(*) as count FROM organizations WHERE org_type = 'LGA'");
+    console.log("=== SUPER ADMIN DASHBOARD INAOMBWA ===");
+
+    // 1. Halmashauri (LGA) - ILIKE inasaidia hata kama iliandikwa 'lga', 'Lga' au 'LGA'
+    const lgaResult = await pool.query("SELECT COUNT(*) as count FROM organizations WHERE org_type ILIKE 'LGA'");
     const lgasCount = parseInt(lgaResult.rows[0].count || '0');
+    console.log(">> LGAs Kwenye DB:", lgasCount);
 
-    // 2. Makampuni Binafsi (PRIVATE) - Kutumia column yako sahihi
-    const companyResult = await pool.query("SELECT COUNT(*) as count FROM organizations WHERE org_type = 'PRIVATE'");
+    // 2. Makampuni Binafsi (PRIVATE)
+    const companyResult = await pool.query("SELECT COUNT(*) as count FROM organizations WHERE org_type ILIKE 'PRIVATE'");
     const companiesCount = parseInt(companyResult.rows[0].count || '0');
+    console.log(">> Companies Kwenye DB:", companiesCount);
 
-    // 3. Nyumba Zilizosajiliwa (Active Properties) - Live kutoka DB
+    // 3. Nyumba Zilizosajiliwa (Active Properties)
     const propertiesRes = await pool.query(`SELECT COUNT(*) as count FROM properties`);
     const propertiesCount = parseInt(propertiesRes.rows[0].count || '0');
+    console.log(">> Nyumba Kwenye DB:", propertiesCount);
 
-    // 4. Mapato Yetu (10% Platform Fee) - Live kutoka DB
+    // 4. Mapato Yetu (10% Platform Fee)
     const revenueRes = await pool.query(`SELECT SUM(sm360_fee) as total_revenue FROM platform_revenues`);
     const totalRevenue = Number(revenueRes.rows[0].total_revenue || 0);
+    console.log(">> Mapato Kwenye DB:", totalRevenue);
 
-    // 5. Miamala 5 ya Mwisho - Live (Sio tena akina Mzee Juma)
+    // 5. Miamala 5 ya Mwisho (NIMERUDISHA STRICT 'JOIN' KAMA ULIVYOTAKA - HAKUNA MUAMALA HEWA)
     const txQuery = `
       SELECT pr.control_number, pr.sm360_fee, pr.transaction_date, o.name as lga_name
       FROM platform_revenues pr
@@ -41,8 +47,8 @@ export const getDashboardMetrics = async (req: Request, res: Response) => {
     `;
     const recentTransactionsRes = await pool.query(txQuery);
     const recentTransactions = recentTransactionsRes.rows;
+    console.log(">> Miamala Mwisho:", recentTransactions.length);
 
-    // Rudisha data kwa majina yale yale ambayo Frontend yetu mpya inatarajia
     res.status(200).json({ 
       status: 'success', 
       data: { 
@@ -54,6 +60,7 @@ export const getDashboardMetrics = async (req: Request, res: Response) => {
       } 
     });
   } catch (error: any) { 
+    console.error("[DASHBOARD_ERROR]: Backend Imecrash hapa ->", error.message);
     res.status(500).json({ status: 'error', message: error.message }); 
   }
 };
